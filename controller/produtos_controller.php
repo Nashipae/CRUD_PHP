@@ -9,7 +9,17 @@ include_once("../../model/produto.php");
 class ProdutosController {
 
   public function __construct(){
-
+    try {
+      $sql = "create table if not exists produtos( ";
+      $sql .= "id bigserial not null primary key, ";
+      $sql .= "codigo character(4) not null, ";
+      $sql .= "descricao character varying(255) not null ";
+      $sql .= ");";
+      $stmt = Conexao::getInstance()->prepare($sql);
+      $stmt->execute();
+    } catch (Exception $exc){
+      throw $exc;
+    }
   }
 
   public function inserir($produto){
@@ -20,7 +30,20 @@ class ProdutosController {
       $stmt->bindValue(":descricao", $produto->getDescricao());
       return $stmt->execute();
     } catch (Exception $exc){
-      echo $exc->getMessage();
+      throw $exc;
+    }
+  }
+
+  public function update($produto){
+    try {
+      $sql = "update produtos set codigo = :codigo, descricao = :descricao where id = :id";
+      $stmt = Conexao::getInstance()->prepare($sql);
+      $stmt->bindValue(":codigo", $produto->getCodigo());
+      $stmt->bindValue(":descricao", $produto->getDescricao());
+      $stmt->bindValue(":id", $produto->getId());
+      return $stmt->execute();
+    } catch (Exception $exc){
+      throw $exc;
     }
   }
 
@@ -32,7 +55,7 @@ class ProdutosController {
       $result = $stmt->fetchAll(PDO::FETCH_CLASS, "produto");
       return $result;
     } catch (Exception $exc){
-      echo $exc->getMessage();
+      throw $exc;
     }
   }
 
@@ -42,6 +65,37 @@ class ProdutosController {
       $stmt = Conexao::getInstance()->prepare($sql);
       $stmt->bindValue(":id", $produto->getId());
       return $stmt->execute();
+    } catch (Exception $exc){
+      throw $exc;
+    }
+  }
+
+  public function findByCodigo($produto) {
+    try {
+      if($produto->getId() != null){
+        $sql = "select * from produtos where codigo = ? and id <> ? order by id desc limit 1";
+      }else{
+        $sql = "select * from produtos where codigo = ? order by id desc limit 1";
+      }
+      $stmt = Conexao::getInstance()->prepare($sql);
+      $stmt->bindValue(1, $produto->getCodigo());
+      if($produto->getId() != null){
+        $stmt->bindValue(2, $produto->getId());
+      }
+      $stmt->execute();
+      return $stmt->fetch();
+    } catch (Exception $exc){
+      throw $exc;
+    }
+  }
+
+  public function findById($produto) {
+    try {
+      $sql = "select * from produtos where id = ?";
+      $stmt = Conexao::getInstance()->prepare($sql);
+      $stmt->bindValue(1, $produto->getId());
+      $stmt->execute();
+      return $stmt->fetch();
     } catch (Exception $exc){
       throw $exc;
     }

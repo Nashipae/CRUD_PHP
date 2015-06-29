@@ -27,11 +27,15 @@ $lista = $controller->listar();
     <? } else { ?>
       <? foreach ($lista as $key => $value) { ?>
         <tr>
-          <td><?= $value->getId() ?></td>
+          <td>
+            <a href="#" class="edit"><?= $value->getId() ?></a>
+          </td>
           <td><?= $value->getCodigo() ?></td>
           <td><?= $value->getDescricao() ?></td>
           <td>
-            <a href="#" class="delete">Excluir</a>
+            <a href="#" class="delete">
+              <span class="glyphicon glyphicon-remove"></span>
+            </a>
           </td>
         </tr>
       <? } ?>

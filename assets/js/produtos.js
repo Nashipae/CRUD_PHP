@@ -7,13 +7,15 @@ $(function(){
     rules: {
       codigo: {
         required: true,
-        minlength: 4
+        minlength: 4,
+        maxlength: 4,
       },
       descricao: {
         required: true
       }
     },
     submitHandler: function(form) {
+      $('#produto_id').removeAttr('disabled');
       var dados = $('#produtos_form').serialize();
       $.ajax({
         type: 'POST',
@@ -32,6 +34,7 @@ $(function(){
           $('#produtos_form')[0].reset();
           $('#codigo').focus();
           validator.resetForm();
+          $('#produto_id').attr('disabled','disabled');
         }
       });
       return false;
@@ -55,7 +58,7 @@ function listar(){
 
 function showMessageSuccess(data){
   $.each(data, function(key, value) {
-    if (key){
+    if (key == 'success'){
         $('#mensagem').addClass('alert-success bg-success');
     } else {
         $('#mensagem').addClass('alert-danger bg-danger');
@@ -72,6 +75,7 @@ function showMessageError(data){
 }
 
 function beforeSend(){
+  $('#mensagem').html('');
   $('#mensagem').removeClass('alert-danger alert-success bg-danger bg-success');
 }
 
@@ -95,4 +99,25 @@ $(document).on('click', 'a.delete', function(){
       }
     });
   }
+});
+
+$(document).on('click', 'a.edit', function(){
+  var id = $(this).parent().parent().find('td:eq(0)').text();
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    data: {id: id},
+    url: 'produto_editar.php',
+    beforeSend: function(data) {
+      beforeSend();
+    },
+    success: function(data){
+      $('#produto_id').val(data.id);
+      $('#codigo').val(data.codigo);
+      $('#descricao').val(data.descricao);
+    },
+    error: function(data){
+      showMessageError(data);
+    }
+  });
 });

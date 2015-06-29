@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../../assets/css/bootstrap.min.css" media="all">
     <link rel="stylesheet" href="../../assets/css/bootstrap-theme.min.css" media="all">
     <link rel="stylesheet" href="../../assets/css/style.css" media="all">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
 
@@ -20,9 +21,16 @@
             <form class="form-horizontal" method="post" id="produtos_form">
 
               <div class="form-group">
+                <label for="produto_id" class="col-sm-3 control-label">ID</label>
+                <div class="col-sm-9">
+                  <input type="text" name="produto_id" id="produto_id" value="" class="form-control" disabled>
+                </div>
+              </div>
+
+              <div class="form-group">
                 <label for="codigo" class="col-sm-3 control-label">Código</label>
                 <div class="col-sm-9">
-                  <input type="text" name="codigo" id="codigo"value="" class="form-control" autofocus>
+                  <input type="text" name="codigo" id="codigo" value="" class="form-control" autofocus>
                 </div>
               </div>
 
@@ -41,9 +49,12 @@
 
             </form>
           </div>
+          <div class="panel-footer">
+            <div class="row-fluid" id="lista"></div>
+          </div>
         </div>
       </div>
-      <div class="row-fluid" id="lista"></div>
+
     </div>
 
     <script src="../../assets/js/jquery-1.11.3.min.js" charset="utf-8"></script>
